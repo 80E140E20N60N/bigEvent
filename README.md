@@ -8,8 +8,8 @@
 2. jQuery
 3. Layui模块化前端框架
     日期和时间组件文档 - layui.laydate；
-4. TinyMCE 富文本编辑
-5. 模板引擎  template.js  
+4. TinyMCE 富文本编辑	http://tinymce.ax-z.cn/
+5. 模板引擎  template.js     http://aui.github.io/art-template/zh-cn/docs/index.html
 
 ### 项目内容细节
 #### 1. 后台管理系统页面切换
