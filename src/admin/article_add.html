@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>文章新增</title>
+    <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/iconfont.css">
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./libs/layui/css/layui.css">
+    <!-- jq -->
+    <script src="./libs/jquery/jquery.min.js"></script>
+    <script src="./libs/layui/layui.js"></script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="common_title">
+            文章新增
+        </div>
+        <div class="container-fluid common_con">
+            <form class="form-horizontal article_form" id="form">
+                <div class="form-group">
+                    <label for="inputTitle" class="col-sm-2 control-label">文章标题：</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="title" class="form-control title" id="inputTitle" value="文章标题文字">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputCover" class="col-sm-2 control-label">文章封面：</label>
+                    <div class="col-sm-10">
+                        <img src="./images/2.jpg" class="article_cover">
+                        <input name="cover" type="file" id="inputCover" onchange="changeCoverImage()">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputCategory" class="col-sm-2 control-label">文章类别：</label>
+                    <div class="col-sm-4">
+                        <select id="category" class="form-control category" name="categoryId">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">发布时间：</label>
+                    <div class="col-sm-4">
+                        <input id="articleDate" name='date' class="jeinput" type="text" placeholder="请选择发布日期" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">文章内容：</label>
+                    <div class="col-sm-10">
+                        <!-- 富文本编辑区域 -->
+                        <textarea id="articleContent">请输入文章内容</textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-success btn-edit" id="save_p">发布</button>
+                        <button type="submit" class="btn btn-default btn-draft" id="save_c">存为草稿</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 封装的Ajax方法 -->
+    <script src="./js/http.js"></script>
+    <script src="./libs/art-template/template-web.js"></script>
+    <!-- 导入富文本 -->
+    <script src="./libs/tinymce_5.5.1/tinymce.min.js"></script>
+
+    <script id="art_cate" type="text/html">
+        {{each data}}
+            <option value="{{$value.id}}">{{$value.name}}</option>
+        {{/each}}
+    </script>
+
+    <script>
+        $(function () {
+            // 文章列表下拉框
+            get_cate_list()
+
+            // 日期选择面板
+            date_render()
+
+            // 富文本
+            textarea()
+
+            // 发布按钮
+            $('#save_p').click(function (e) {
+                // 阻止浏览器对表单的默认提交行为
+                e.preventDefault();
+
+                save('已发布')
+            })
+        })
+
+        // 发表文章   文章列表下拉框
+        function get_cate_list() {
+            myAjax('/admin/category/list', 'get', null, function (resData) {
+                let res = template('art_cate', resData)
+                $('#category').html(res)
+            })
+        }
+
+        // 日期选择面板
+        function date_render() {
+            layui.use('laydate', function () {
+                var laydate = layui.laydate;
+
+                //执行一个laydate实例
+                laydate.render({
+                    elem: '#articleDate' //指定元素
+                });
+            });
+        }
+
+        // 富文本
+        function textarea() {
+            tinymce.init({
+                selector: '#articleContent',
+                language: 'zh_CN',//注意大小写
+            });
+        }
+
+        // 图片选择
+        function changeCoverImage() {
+            // 获取file控件选择的图片
+            let upImg = document.querySelector('#inputCover').files[0];
+
+            // 将文件生成一个可以本地访问的路径
+            let filePath = URL.createObjectURL(upImg)
+
+            // 将路径设置给img标签的src  使用JQ attr() 方法设置或返回被选元素的属性值
+            $('.article_cover').attr('src', filePath)
+        }
+
+        // 文章发布功能
+        function save(type) {
+            // 收集数据
+            let title = $('#inputTitle').val();
+            let cover = document.querySelector('#inputCover').files[0];
+            let categoryId = $('#category').val();
+            let date = $('#articleDate').val();
+            let content = tinyMCE.editors['articleContent'].getContent();
+            let state = type;
+            // console.log(title, cover, categoryId, date, content);
+
+            // formData参数准备
+            let formData = new FormData();
+            formData.append('title', title);
+            formData.append('cover', cover);
+            formData.append('categoryId', categoryId);
+            formData.append('date', date);
+            formData.append('content', content);
+            formData.append('state', state);
+
+            // 使用myAjax方法调用文章发布接口
+            myAjax('/admin/article/publish', 'POST', formData, function (resData) {
+                if (resData.code != 200) {
+                    alert('resData.msg')
+                    return;
+                }
+                window.location = './article_list.html'
+            })
+        }
+    </script>
+</body>
+
+</html>

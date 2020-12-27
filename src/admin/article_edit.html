@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>编辑文章</title>
+    <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/iconfont.css">
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./libs/layui/css/layui.css">
+    <!-- jq -->
+    <script src="./libs/jquery/jquery.min.js"></script>
+    <script src="./libs/layui/layui.js"></script>
+    <!-- 引入TinyMCE脚本，设置富文本  -->
+    <script src="./libs/tinymce_5.5.1/tinymce.min.js"></script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="common_title">
+            编辑文章
+        </div>
+        <div class="container-fluid common_con">
+            <form class="form-horizontal article_form" id="form">
+                <div class="form-group">
+                    <label for="inputTitle" class="col-sm-2 control-label">文章标题：</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="title" class="form-control title" id="inputTitle" value="文章标题文字">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputCover" class="col-sm-2 control-label">文章封面：</label>
+                    <div class="col-sm-10">
+                        <img id="img" src="./images/2.jpg" class="article_cover">
+                        <input name="cover" type="file" id="inputCover" onchange="changeImg()">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputCategory" class="col-sm-2 control-label">文章类别：</label>
+                    <div class="col-sm-4">
+                        <select id="category" class="form-control category" name="categoryId">
+
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">发布时间：</label>
+                    <div class="col-sm-4">
+                        <input id="articleDate" name='date' class="jeinput" type="text" placeholder="请选择发布日期" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">文章内容：</label>
+                    <div class="col-sm-10">
+                        <!-- 富文本编辑区域 -->
+                        <textarea id="articleContent">请输入文章内容</textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button id="edit" type="submit" class="btn btn-success btn-edit">修改</button>
+                        <button id="edit_c" type="submit" class="btn btn-default btn-draft">存为草稿</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="./js/http.js"></script>
+    <script src="./libs/art-template/template-web.js"></script>
+    <!-- 文章类别使用模板引擎动态生成 -->
+    <script id="art_cate" type="text/html">
+        {{each data}}
+        <option value="{{$value.id}}">{{$value.name}}</option>
+        {{/each}}
+    </script>
+
+    <script>
+        $(function () {
+            // 设置文章类别
+            set_category()
+
+            //设置发布日期  
+            set_date()
+
+            // 设置富文本编辑器
+            set_richText()
+
+            // 修改 按钮点击事件
+            $('#edit').click(function (e) {
+                // 阻止浏览器默认跳转
+                e.preventDefault();
+                save('已发布');
+            })
+
+            // 存为草稿 按钮点击事件
+            $('#edit_c').click(function (e) {
+                // 阻止浏览器默认跳转
+                e.preventDefault();
+                save('')
+            })
+        })
+
+        // 设置图像
+        function changeImg() {
+            let file = document.querySelector('#inputCover').files[0];
+            let path = URL.createObjectURL(file);
+            $('#img').attr('src', path);
+        }
+
+        // 设置文章类别
+        function set_category() {
+            myAjax('/admin/category/list', 'get', null, function (resData) {
+                let res = template('art_cate', resData);
+                $('#category').html(res);
+                get_info_by_id()
+            })
+        }
+
+        // 设置发布日期
+        function set_date() {
+            layui.use('laydate', function () {
+                var laydate = layui.laydate;
+
+                //执行一个laydate实例
+                laydate.render({
+                    elem: '#articleDate' //指定元素
+                });
+            });
+        }
+
+        // 设置富文本编辑器
+        function set_richText() {
+            tinymce.init({
+                selector: '#articleContent',
+                language: 'zh_CN',//注意大小写
+            });
+        }
+
+        // 获取window.locatin.href中的id参数值
+        function get_params() {
+            let url = window.location.href;
+            // console.log(typeof url);
+            // 调用split()方法， 根据 ？将utl字符串炸开，返回数组
+            let urlArr = url.split('?');
+            // console.log(arr);
+            // 做安全处理
+            if (urlArr.length <= 1) {
+                alert('请输入正确的参数')
+                return;
+            }
+            // 得到id参数
+            let parms = urlArr[1];
+            // 再次调用split()方法，根据 = 将字符串炸开，返回数组
+            let parmsArr = parms.split('==');
+            let id_value = parmsArr[1];
+
+            return id_value;
+        }
+
+        // 根据文章id获取文章之前数据的请求
+        function get_info_by_id() {
+            // 获取id参数值
+            let p_id = get_params();
+
+            myAjax('/admin/article/search', 'get', { id: p_id }, function (resData) {
+                let data = resData.data;
+                $('#inputTitle').val(data.title);
+                $('#img').attr('src', data.cover);
+                $('#category').val(data.categoryId);
+                $('#articleDate').val(data.date);
+                // 富文本赋值
+                setTimeout(() => {
+                    tinyMCE.editors['articleContent'].setContent(data.content);
+                }, 300)
+
+            })
+
+        }
+
+        // 编辑数据   /admin/article/edit 文章编辑接口
+        function save(type) {
+            // 获取数据
+            let title = $('#inputTitle').val();
+            let cover = document.querySelector('#inputCover').files[0];
+            let categoryId = $('#category').val();
+            let date = $('#articleDate').val();
+            let content = tinyMCE.editors['articleContent'].getContent();
+            let state = type;
+            // 将数据包装成FormData类型数据
+            let formData = new FormData();
+            formData.append('title', title);
+            formData.append('cover', cover);
+            formData.append('categoryId', categoryId);
+            formData.append('date', date);
+            formData.append('content', content);
+            formData.append('state', state);
+            formData.append('id', get_params());
+
+            // myAjax方法 调用文章编辑接口
+            myAjax('/admin/article/edit', 'post', formData, function (resData) {
+                if (resData.code == 200) {
+                    window.location = './article_list.html'
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>
