@@ -6,8 +6,7 @@
 ### 使用技术
 1. Ajax
 2. jQuery
-3. Layui模块化前端框架
-    日期和时间组件文档 - layui.laydate；
+3. Layui模块化前端框架       https://www.layui.com/doc/ 
 4. TinyMCE 富文本编辑	http://tinymce.ax-z.cn/
 5. 模板引擎  template.js     http://aui.github.io/art-template/zh-cn/docs/index.html
 
@@ -44,7 +43,6 @@
 ### 4. 文章发表
 #### 4.1 时间面板控件  
         layui.laydate
-
 ### 参与贡献
 子晗
 
