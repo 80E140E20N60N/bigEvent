@@ -19,7 +19,7 @@
 		<i class="iconfont icon-yidiandiantubiao04"></i>  <span>首页</span> 
 	</a>
 
-### 2. 文章管理
+### 2. 文章管理下拉框动画
 ####  2.1 下拉列表
         调用 jq 的 slideToggle() 方法，使用滑动效果(高度变化)来切换元素的可见状态
 ####  2.2 箭头翻转
@@ -40,9 +40,17 @@
             processData: false,    //处理数据
             原因：在 ajax 中 contentType 设置为 false 是为了避免 JQuery 对其操作，从而失去分界符，而使服务器不能正常解析文件。
         4.  formData数据类型判断    instanceof判断
+
 ### 4. 文章发表
 #### 4.1 时间面板控件  
         layui.laydate
+
+### 5. 文章类别管理  article_category.html
+#### 5.1 模板引擎
+      1. 引入引入模板引擎js
+      2. 定义模板
+      3. 根据定义模板的id,传入数据，并渲染进页面结构中
+
 ### 参与贡献
 子晗
 
