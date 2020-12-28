@@ -58,8 +58,15 @@
         2. 方法二：form表单+jq中的serilalize()方法实现
             2.1 所有数据在form标签内
             2.2 保证需要获取值的元素都需要有一个name属性，name属性值从接口文档获取，和接口文档所描述的名称一致
-##### 5.2.2 bootstrap模态框使用
+##### 5.2.2 bootstrap 模态框使用
+        模态窗口两种打开方式
+        1.在按钮上注册点击事件，通过$('#模态框id').modal('show')打开，通过$('#模态框id').modal('hide')来隐藏
+        2.通过data-toggle="modal"
+          data-target="#myModal"来打开
 
+#### 5.3 删除分类
+##### 5.3.2 Layui  confirm询问框使用
+#### 5.4 编辑分类
 
 ### 参与贡献
 子晗

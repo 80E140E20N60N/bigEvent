@@ -10,9 +10,11 @@
     <link rel="stylesheet" href="./css/reset.css">
     <link rel="stylesheet" href="./css/iconfont.css">
     <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./libs/layui/css/modules/layer/default/layer.css">
     <script src="./libs/jquery/jquery.min.js"></script>
     <!-- 放在jq后，因为bootstrap基于jq -->
     <script src="./libs/bootstrap/js/bootstrap.min.js"></script>
+    <script src="./libs/layui/lay/modules/layer.js"></script>
 </head>
 
 <body>
@@ -58,7 +60,38 @@
         </div>
     </div>
 
-    <!-- 新增分类布局区域 -->
+
+    <!-- 编辑分类模态框布局区域 -->
+    <div class="modal fade" id="Modal_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">编辑分类</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="add_category">
+                        <div class="form-group">
+                            <label for="name">分类名</label>
+                            <input type="text" class="form-control" id="name_edit" placeholder="分类名">
+                        </div>
+                        <div class="form-group">
+                            <label for="slug">分类别名</label>
+                            <input type="text" class="form-control" id="slug_edit" placeholder="分类别名">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" data-dismiss="modal" class="btn btn-default">取消</button>
+                            <button id="btn_editSave" type="button" class="btn btn-primary btn_opt">保存</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <!-- 新增分类模态框布局区域 -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -79,7 +112,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" data-dismiss="modal" class="btn btn-default">取消</button>
-                            <button type="button" class="btn btn-primary btn_opt">保存</button>
+                            <button id="btn_addSave" type="button" class="btn btn-primary btn_opt">保存</button>
                         </div>
                     </div>
                 </div>
@@ -88,6 +121,10 @@
         </div>
 
     </div>
+
+
+
+
     <script src="./js/http.js"></script>
     <!-- 引入模板引擎js -->
     <script src="./libs/art-template/template-web.js"></script>
@@ -98,8 +135,8 @@
             <td>{{$value.name}}</td>
             <td>{{$value.slug}}</td>
             <td class="text-center">
-                <a href="javascript:void(0)" data-toggle="modal" class=" btn btn-info btn-xs">编辑</a>
-                <a href="javascript:void(0)" class="btn btn-danger btn-xs">删除</a>
+                <a onclick="editClass({{$value.id}})" href="javascript:void(0)"  class=" btn btn-info btn-xs">编辑</a>
+                <a onclick="delClass({{$value.id}})" href="javascript:void(0)" class="btn btn-danger btn-xs">删除</a>
             </td>
         </tr>
         {{/each}}
@@ -109,32 +146,16 @@
         $(function () {
             get_list();
 
-            // 新增面板 保存按钮 点击事件
-            $('.btn_opt').click(function () {
-                // 1.收集数据
-                let name = $('#name').val();
-                let slug = $('#slug').val();
-                // 2.发送数据给服务器
-                let parms = {
-                    name: name,
-                    slug: slug
-                }
-                myAjax('/admin/category/add', 'post', parms, function (resData) {
-                    if (resData.code != 200) {
-                        alert(resData.msg);
-                        return;
-                    }
-                    // 3.刷新页面
-                    get_list();
-                    // 4. 关闭模态框
-                    $('#myModal').modal('hide')
-                    // 5. 清除输入框内容
-                    $('#name').val('');
-                    $('#slug').val('')
-                })
+            // 新增分类 保存按钮 点击事件
+            $('#btn_addSave').click(function () {
+                addClass()
             })
+
+            // 保存类别编辑
+            editSave()
         })
 
+        // 获取文章类别
         function get_list() {
             myAjax('/admin/category/list', 'get', null, function (resData) {
                 let resHtml = template('art_list', resData);
@@ -142,6 +163,93 @@
             })
         }
 
+        // 新增类别
+        function addClass() {
+            // 1.收集数据
+            let name = $('#name').val();
+            let slug = $('#slug').val();
+            // 2.发送数据给服务器
+            let parms = {
+                name: name,
+                slug: slug
+            }
+            myAjax('/admin/category/add', 'post', parms, function (resData) {
+                if (resData.code != 200) {
+                    alert(resData.msg);
+                    return;
+                }
+                // 3.刷新页面
+                get_list();
+                // 4. 关闭模态框
+                $('#myModal').modal('hide')
+                // 5. 清除输入框内容
+                $('#name').val('');
+                $('#slug').val('')
+            })
+        }
+
+        // 删除类别
+        function delClass(d_id) {
+            // 使用Layui confirm询问框，删除前进行询问，防止误删
+            layer.confirm('确认删除此类别?', { icon: 3, title: '删除确认' }, function (index) {
+
+                myAjax('/admin/category/delete', 'post', { id: d_id }, function (resData) {
+                    if (resData.code != 200) {
+                        layer.msg(resData.msg);
+                        return;
+                    }
+                    get_list();
+                })
+
+                layer.close(index);
+            });
+
+        }
+
+        // 编辑类别
+        let edit_id_global = 0;
+        function editClass(e_id) {
+            edit_id_global = e_id;
+            // 打开模态框
+            $('#Modal_edit').modal('show')
+            // 根据id获取老数据
+            myAjax('/admin/category/search', 'get', { id: e_id }, function (resData) {
+                if (resData.code != 200) {
+                    layer.msg(resData.msg);
+                    return;
+                }
+                if (!resData.data || resData.data.length <= 0) {
+                    layer.msg('请检查id参数');
+                    return;
+                }
+                let data = resData.data[0];
+                $('#name_edit').val(data.name)
+                $('#slug_edit').val(data.slug)
+            })
+        }
+
+        // 保存修改后的类别
+        function editSave() {
+            $('#btn_editSave').click(function () {
+                let name = $('#name_edit').val();
+                let slug = $('#slug_edit').val();
+                let es_id = edit_id_global;
+                let parms = {
+                    name: name,
+                    slug: slug,
+                    id: es_id
+                }
+                myAjax('/admin/category/edit', 'post', parms, function (resData) {
+                    if (resData.code !== 200) {
+                        console.log(1);
+                        layer.msg(resData.msg);
+                        return;
+                    }
+                    get_list();
+                    $('#Modal_edit').modal('hide')
+                })
+            })
+        }
     </script>
 </body>
 
