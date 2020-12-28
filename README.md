@@ -63,11 +63,18 @@
         1.在按钮上注册点击事件，通过$('#模态框id').modal('show')打开，通过$('#模态框id').modal('hide')来隐藏
         2.通过data-toggle="modal"
           data-target="#myModal"来打开
+        注意：两种方式同时使用时，需要将第一种方法放在前面
 
 #### 5.3 删除分类
-##### 5.3.2 Layui  confirm询问框使用
+         Layui  (layer弹出层内置方法) confirm询问框使用
 #### 5.4 编辑分类
-
+        1.根据id将当前行的类别内容读取
+        2.新建bootstrap模态框，将之前的内容填充
+        3.修改后重新提交
+#### 5.5 评论管理
+        1.art_template模板引擎if条件判断
+        2.Layui  laypage分页
+        3.Layui  (layer弹出层内置方法) confirm询问框使用
 ### 参与贡献
 子晗
 

@@ -10,7 +10,11 @@
   <link rel="stylesheet" href="./css/reset.css">
   <link rel="stylesheet" href="./css/iconfont.css">
   <link rel="stylesheet" href="./css/main.css">
+  <link rel="stylesheet" href="./libs/layui/css/layui.css">
+  <link rel="stylesheet" href="./libs/layui/css/modules/layer/default/layer.css">
   <script src="./libs/jquery/jquery.min.js"></script>
+  <script src="./libs/layui/layui.js"></script>
+  <script src="./libs/layui/lay/modules/layer.js"></script>
 </head>
 
 <body>
@@ -30,18 +34,7 @@
             <th class="text-center" width="100">操作</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>小周</td>
-            <td>这是一条测试评论，欢迎光临</td>
-            <td>《世界，你好》</td>
-            <td>2017-07-04 12:00:00</td>
-            <td>已批准</td>
-            <td class="text-center">
-              <a href="javascript:void(0);;" class="btn btn-warning btn-xs">拒绝</a>
-              <a href="javascript:void(0);;" class="btn btn-danger btn-xs">删除</a>
-            </td>
-          </tr>
+        <tbody id="tbody">
           <tr class="danger">
             <td>中周</td>
             <td>How are you?</td>
@@ -53,49 +46,137 @@
               <a href="javascript:void(0);;" class="btn btn-danger btn-xs">删除</a>
             </td>
           </tr>
-
-          <tr>
-            <td>武秀英</td>
-            <td>外影广条同取水权科速工与。矿身面却属次养导务作者用品油调。高石期品极放存斗一号口消别共去。</td>
-            <td>《世界，你好》</td>
-            <td>1970-03-15 11:31:50</td>
-            <td>已拒绝</td>
-            <td class="text-center">
-              <a href="javascript:void(0);;" class="btn btn-danger btn-xs">删除</a>
-            </td>
-          </tr>
-
         </tbody>
       </table>
-      <div class="row text-center">
-        <ul class="pagination pagination-sm">
-          <li class="page-item first disabled"><a href="#" class="page-link">首页</a></li>
-          <li class="page-item prev disabled"><a href="#" class="page-link">上一页</a></li>
-          <li class="page-item active"><a href="#" class="page-link">1</a></li>
-          <li class="page-item"><a href="#" class="page-link">2</a></li>
-          <li class="page-item"><a href="#" class="page-link">3</a></li>
-          <li class="page-item"><a href="#" class="page-link">4</a></li>
-          <li class="page-item"><a href="#" class="page-link">5</a></li>
-          <li class="page-item"><a href="#" class="page-link">6</a></li>
-          <li class="page-item"><a href="#" class="page-link">7</a></li>
-          <li class="page-item next"><a href="#" class="page-link">下一页</a></li>
-          <li class="page-item last"><a href="#" class="page-link">尾页</a></li>
-        </ul>
-        <ul id="pagination" class="pagination-sm"></ul>
+
+      <!-- 分页控件的静态结构 -->
+      <div id="pager" class="row text-center">
+
       </div>
 
     </div>
   </div>
 
+  <script src="./libs/art-template/template-web.js"></script>
   <script src="./js/http.js"></script>
+
+  <!-- 
+    待审核：删除 批准 拒绝
+    已通过：删除 拒绝
+    已拒绝：删除 批准
+   -->
+  <script id="art_list" type="text/html">
+    {{each data}}
+    {{if $value.state=='已拒绝'}}
+    <tr class="danger">
+      {{else}}
+    <tr> 
+    {{/if}}
+    
+      <td>{{$value.author}}</td>
+      <td>{{$value.content}}</td>
+      <td>{{$value.title}}</td>
+      <td>{{$value.date}} {{$value.time}}</td>
+      <td>{{$value.state}}</td>     
+      <td class="text-center">
+      {{if $value.state=='已拒绝' }}
+        <a onclick="btn_pass({{$value.id}})" href="javascript:void(0);;" class="btn btn-info btn-xs">批准</a>
+        {{else if $value.state=='已通过'}}
+        <a onclick="reject_pass({{$value.id}})" href="javascript:void(0);;" class="btn btn-info btn-xs">拒绝</a>
+        {{else}}
+        <a onclick="btn_pass({{$value.id}})" href="javascript:void(0);;" class="btn btn-info btn-xs">批准</a>
+        <a onclick="reject_pass({{$value.id}})" href="javascript:void(0);;" class="btn btn-info btn-xs">拒绝</a>
+      {{/if}}       
+        <a onclick="btn_del({{$value.id}})" href="javascript:void(0);;" class="btn btn-danger btn-xs">删除</a>
+      </td>
+    </tr>
+    {{/each}}
+  </script>
+
   <script>
     $(function () {
       // 获取评论数据接口
       getList();
+
     })
 
-    function getList() {
-      myAjax('/admin/comment/search', 'GET', null, function (resDate) { console.log(resDate) })
+    function getList(curr, limit) {
+      let param = {
+        page: curr,
+        perpage: limit
+      }
+      myAjax('/admin/comment/search', 'GET', param, function (resData) {
+        // console.log(resData)
+        let resHtml = template('art_list', resData.data)
+        $('#tbody').html(resHtml)
+        // 分页设置
+        setPage(resData.data.totalCount, curr)
+      })
+    }
+
+    // 分页设置
+    function setPage(totalCount, curr) {
+      layui.use('laypage', function () {
+        var laypage = layui.laypage;
+
+        //执行一个laypage实例
+        laypage.render({
+          elem: 'pager',  //注意，这里的 test1 是 ID，不用加 # 号
+          count: totalCount, //数据总数，从服务端得到
+          limit: 6,   //每页数据总数
+          curr: curr,
+          jump: function (obj, first) {
+            if (!first) {
+              getList(obj.curr, obj.limit);
+            }
+          }
+
+        });
+      });
+    }
+
+    // 根据id删除评论
+    function btn_del(del_id) {
+      layer.confirm('确定删除该条评论?', { icon: 3, title: '提示' }, function (index) {
+        myAjax('/admin/comment/delete', 'post', { id: del_id }, function (resData) {
+          if (resData.code != 200) {
+            alert(resData.msg);
+            return;
+          }
+          getList()
+        })
+
+        layer.close(index);
+      });
+
+
+    }
+
+    // 根据id通过评论
+    function btn_pass(pass_id) {
+      layer.confirm('确定通过该条评论?', { icon: 3, title: '提示' }, function (index) {
+        myAjax('/admin/comment/pass', 'post', { id: pass_id }, function (resData) {
+          if (resData.code != 200) {
+            alert(resData.msg);
+            return;
+          }
+          getList()
+        })
+        layer.close(index);
+      });
+    }
+    // 根据id拒绝评论
+    function reject_pass(reject_id) {
+      layer.confirm('确定拒绝该条评论?', { icon: 3, title: '提示' }, function (index) {
+        myAjax('/admin/comment/reject', 'post', { id: reject_id }, function (resData) {
+          if (resData.code != 200) {
+            alert(resData.msg);
+            return;
+          }
+          getList()
+        })
+        layer.close(index);
+      });
     }
   </script>
 </body>
