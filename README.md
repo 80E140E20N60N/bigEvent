@@ -9,6 +9,8 @@
 3. Layui模块化前端框架       https://www.layui.com/doc/ 
 4. TinyMCE 富文本编辑	http://tinymce.ax-z.cn/
 5. 模板引擎  template.js     http://aui.github.io/art-template/zh-cn/docs/index.html
+6. bootstrap 模态框
+
 
 ### 项目内容细节
 #### 1. 后台管理系统页面切换
@@ -50,6 +52,14 @@
       1. 引入引入模板引擎js
       2. 定义模板
       3. 根据定义模板的id,传入数据，并渲染进页面结构中
+#### 5.2 新增分类
+##### 5.2.1 获取文本框输入的数据
+        1. 方法一：jq  id选择器+val()
+        2. 方法二：form表单+jq中的serilalize()方法实现
+            2.1 所有数据在form标签内
+            2.2 保证需要获取值的元素都需要有一个name属性，name属性值从接口文档获取，和接口文档所描述的名称一致
+##### 5.2.2 bootstrap模态框使用
+
 
 ### 参与贡献
 子晗

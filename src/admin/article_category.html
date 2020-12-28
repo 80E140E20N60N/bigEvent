@@ -108,6 +108,31 @@
     <script>
         $(function () {
             get_list();
+
+            // 新增面板 保存按钮 点击事件
+            $('.btn_opt').click(function () {
+                // 1.收集数据
+                let name = $('#name').val();
+                let slug = $('#slug').val();
+                // 2.发送数据给服务器
+                let parms = {
+                    name: name,
+                    slug: slug
+                }
+                myAjax('/admin/category/add', 'post', parms, function (resData) {
+                    if (resData.code != 200) {
+                        alert(resData.msg);
+                        return;
+                    }
+                    // 3.刷新页面
+                    get_list();
+                    // 4. 关闭模态框
+                    $('#myModal').modal('hide')
+                    // 5. 清除输入框内容
+                    $('#name').val('');
+                    $('#slug').val('')
+                })
+            })
         })
 
         function get_list() {
