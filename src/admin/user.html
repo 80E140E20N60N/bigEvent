@@ -10,8 +10,9 @@
     <link rel="stylesheet" href="./css/reset.css">
     <link rel="stylesheet" href="./css/iconfont.css">
     <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./libs/layui/css/modules/layer/default/layer.css">
     <script src="./libs/jquery/jquery.min.js"></script>
-
+    <script src="./libs/layui/lay/modules/layer.js"></script>
 </head>
 
 <body>
@@ -43,8 +44,9 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">用户图标：</label>
                     <div class="col-sm-10">
-                        <img src="images/2.jpg" alt="" class="user_pic">
-                        <input style="display: block" name="userPic" type="file" id="exampleInputFile">
+                        <img src="images/2.jpg" alt="" id="user_pic" class="user_pic">
+                        <input style="display: block" name="userPic" type="file" onchange="changeImg()"
+                            id="exampleInputFile">
                     </div>
                 </div>
 
@@ -57,11 +59,82 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-success btn-edit">修改</button>
+                        <button id="modify" type="submit" class="btn btn-success btn-edit">修改</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+
+    <script src="./js/http.js"></script>
+    <script>
+        $(function () {
+            // 获取用户详情
+            getUserInfo()
+            // 修改用户信息
+            modifyFormValue()
+        })
+
+        function getUserInfo() {
+            myAjax('/admin/user/detail', 'get', null, function (resData) {
+                if (resData.code != 200) {
+                    alert(resData.msg)
+                    return;
+                }
+                let data = resData.data;
+                $('#username').val(data.username);
+                $('#nickname').val(data.nickname);
+                $('#email').val(data.email);
+                $('#user_pic').attr('src', data.userPic);
+                $('#password').val(data.password);
+            })
+        }
+
+        // 修改用户信息
+        function modifyFormValue() {
+            $('#form').submit(function (e) {
+                // 阻止浏览器对表单的默认提交行为
+                e.preventDefault();
+                // 收集表单元素
+                let formData = new FormData();
+                // 完成数据追加拼接
+                formData.append('username', $('#username').val())
+                formData.append('nickname', $('#nickname').val())
+                formData.append("email", $('#email').val());
+                let file = document.querySelector('#exampleInputFile').files[0];
+                formData.append("userPic", file);
+                formData.append("password", $('#password').val());
+
+                //将数据发送给服务器
+                myAjax('/admin/user/edit', 'post', formData, function (resData) {
+                    if (resData.code != 200) {
+                        layer.msg(resData.msg);
+                        return;
+                    }
+                    // 4.0 提示成功信息
+                    layer.msg('修改用户信息成功');
+
+                    // 5.0 由于user.html是在iframe中的，此时要通过js代码去更新index.html中的用户头像和昵称
+                    // 通过window.parent.get_userInfo()代码一定要使用http协议打开页面，使用file协议打开的页面执行不成功的
+                    window.parent.get_userInfo();
+                })
+            })
+        }
+
+        // 实现本地的图片选择预览
+        function changeImg() {
+            // 1.0 获取文件对象
+            let file = document.querySelector('#exampleInputFile').files[0];
+
+            // 2.0 创建本地路径: blob:null/xxxxxxx
+            let url = URL.createObjectURL(file);
+
+            // 3.0 将图片本地路径赋值给img对象的src完成本地显示
+            $('#user_pic').attr('src', url);
+        }
+
+
+    </script>
 </body>
+
 </html>

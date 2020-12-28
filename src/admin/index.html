@@ -19,8 +19,8 @@
     <div class="sider">
         <a href="#" class="logo"><img src="./images/logo02.png" alt="logo"></a>
         <div class="user_info">
-            <img src="http://localhost:8080/icon.jpg" alt="person">
-            <span>欢迎&nbsp;&nbsp;李思思</span>
+            <img class="userPic" src="http://localhost:8080/icon.jpg" alt="person">
+            <span>欢迎&nbsp;&nbsp;<i id="nickname">李思思</i></span>
             <b>管理员</b>
         </div>
         <!-- 左侧导航栏 -->
@@ -51,7 +51,7 @@
         <div class="header_bar">
             <div class="user_center_link">
                 <a href="./user.html">个人中心</a>
-                <img src="http://localhost:8080/icon.jpg" alt="person">
+                <img class="userPic" src="http://localhost:8080/icon.jpg" alt="person">
                 <a href="javascript:void(0)" class="logout"><i class="iconfont icon-tuichu"></i> 退出</a>
             </div>
         </div>
@@ -61,6 +61,7 @@
         </div>
     </div>
 
+    <script src="./js/http.js"></script>
     <script src="./js/index.js"></script>
 
     <script>
@@ -69,6 +70,8 @@
             setBgColor()
             // 文章管理下拉框显示与隐藏，同时箭头翻转
             articleList()
+            // 3.0 调用获取用户信息的方法
+            get_userInfo();
         })
 
         //单击事件 菜单背景色改变
@@ -95,7 +98,13 @@
             })
         }
 
-
+        // 需求：根据个人中心(user.html)提交的内容，更新对应的图像和名字
+        function get_userInfo() {
+            myAjax('/admin/user/info', 'get', null, function (resData) {
+                $('.userPic').attr('src', resData.data.userPic)
+                $('#nickname').html(resData.data.nickname)
+            })
+        }
     </script>
 </body>
 

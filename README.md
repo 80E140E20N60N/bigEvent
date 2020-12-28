@@ -10,6 +10,7 @@
 4. TinyMCE 富文本编辑	http://tinymce.ax-z.cn/
 5. 模板引擎  template.js     http://aui.github.io/art-template/zh-cn/docs/index.html
 6. bootstrap 模态框
+7. FormData数据
 
 
 ### 项目内容细节
@@ -34,8 +35,8 @@
         1.将form表单元素的name与value进行组合，实现表单数据的序列化，从而减少表单元素的拼接，提高工作效率；
         2.异步上传文件
 #####  3.2.2 使用步骤：
-        1. 创建一个空对象  let formData = new FormData();
-        2. 通过append(key,value)在数据末尾追加数据
+        1. 示例化，创建一个空对象  let formData = new FormData();
+        2. 通过append(key,value)在数据末尾追加数据,完成数据拼接
             formData.append('title', title);
         3. ajax()方法使用,注意，需添加如下两行代码
             contentType: false,    //发送数据的格式
@@ -71,10 +72,13 @@
         1.根据id将当前行的类别内容读取
         2.新建bootstrap模态框，将之前的内容填充
         3.修改后重新提交
-#### 5.5 评论管理
+### 6. 评论管理  commen_tlist.html
         1.art_template模板引擎if条件判断
         2.Layui  laypage分页
         3.Layui  (layer弹出层内置方法) confirm询问框使用
+### 7. 个人中心
+#### 7.1 FormData数据类型
+#### 7.2 本地图片显示     
 ### 参与贡献
 子晗
 
