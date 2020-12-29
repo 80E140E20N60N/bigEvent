@@ -44,6 +44,7 @@
         </div>
     </div>
 
+    <!-- 图表容器 -->
     <div class="container-fluid">
         <div class="row curve-pie">
             <div class="col-lg-8 col-md-8">
@@ -60,6 +61,75 @@
     </div>
 
     <script src="./js/http.js"></script>
+    <script>
+        $(function () {
+            // 趋势折线图方法
+            curve_show()
+        })
+
+        function curve_show() {
+            // 1.初始化实例
+            let myChart = echarts.init(document.getElementById('curve_show'));
+
+            // 2. 设置参数
+            let option = {
+                title: {
+                    text: '文章日新增趋势',
+                    left: 'center',
+                    top: 15,
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                // 鼠标悬停出现数据
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        label: {
+                            backgroundColor: '#6a7985'
+                        }
+                    }
+                },
+                series: [{
+                    data: [820, 932, 901, 934, 1290, 1330, 1320],
+                    type: 'line',
+                    //  设置折线的每一个点数据显示
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'top'
+                        }
+                    },
+                    smooth: true,  //线条平滑
+                    areaStyle: {
+                        // 颜色渐变
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 1,
+                            y2: 0,
+                            colorStops: [{
+                                offset: 0, color: 'red' // 0% 处的颜色
+                            }, {
+                                offset: 1, color: 'blue' // 100% 处的颜色
+                            }],
+                            global: false // 缺省为 false
+                        }
+                    }
+                }]
+            };
+
+            // 3.调用方法进行图表输出
+            myChart.setOption(option);
+        }
+    </script>
 </body>
 
 </html>
