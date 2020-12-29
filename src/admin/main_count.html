@@ -71,6 +71,9 @@
 
             // 获取文章分类饼状图数据
             getPieData()
+
+            // 获取日文章访问量柱状图数据
+            getColumnData()
         })
 
         // 首页数据获取  使用 /admin/data/info 接口
@@ -197,6 +200,53 @@
                         data: datas
                     }
                 ]
+            };
+            // 3.调用方法进行图表输出
+            myChart.setOption(option);
+        }
+
+        // 获取日文章访问量柱状图数据
+        function getColumnData() {
+            myAjax('/admin/data/visit', 'get', null, function (resData) {
+                let data = resData.data;
+                let x_data = [];
+                let s_data = []
+                for (let key in data) {
+                    x_data.push(key);
+                    s_data.push(data[key]);
+                }
+                column_show(x_data, s_data)
+            })
+        }
+
+        // 日文章访问量柱状图方法
+        function column_show(x_data, s_data) {
+            // 1.初始化实例
+            let myChart = echarts.init(document.getElementById('column_show'));
+
+            // 2. 设置参数
+            let option = {
+                title: {
+                    text: '文章日访问量',
+                    left: 'center',
+                    top: 20
+                },
+                xAxis: {
+                    type: 'category',
+                    data: x_data
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    data: s_data,
+                    type: 'bar',
+                    showBackground: true,
+                    barWidth: 38, //每根柱子的宽度
+                    backgroundStyle: {
+                        color: 'rgba(220, 220, 220, 0.8)'
+                    }
+                }]
             };
             // 3.调用方法进行图表输出
             myChart.setOption(option);
