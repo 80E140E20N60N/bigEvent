@@ -19,25 +19,25 @@
         <div class="row spannel_list">
             <div class="col-sm-3 col-xs-6">
                 <div class="spannel">
-                    <em>10015</em><span>篇</span>
+                    <em id="totalArticle">10015</em><span>篇</span>
                     <b>总文章数</b>
                 </div>
             </div>
             <div class="col-sm-3 col-xs-6">
                 <div class="spannel scolor01">
-                    <em>123</em><span>篇</span>
+                    <em id="dayArticle">123</em><span>篇</span>
                     <b>日新增文章数</b>
                 </div>
             </div>
             <div class="col-sm-3 col-xs-6">
                 <div class="spannel scolor02">
-                    <em>35</em><span>条</span>
+                    <em id="totalComment">35</em><span>条</span>
                     <b>评论总数</b>
                 </div>
             </div>
             <div class="col-sm-3 col-xs-6">
                 <div class="spannel scolor03">
-                    <em>123</em><span>条</span>
+                    <em id="dayComment">123</em><span>条</span>
                     <b>日新增评论数</b>
                 </div>
             </div>
@@ -63,11 +63,38 @@
     <script src="./js/http.js"></script>
     <script>
         $(function () {
-            // 趋势折线图方法
-            curve_show()
+            // 首页数据获取 
+            get_mainInfo()
+
+            // 获取文章日新增数据
+            getCurveData()
+
+            // 获取文章分类饼状图数据
+            getPieData()
         })
 
-        function curve_show() {
+        // 首页数据获取  使用 /admin/data/info 接口
+        function get_mainInfo() {
+            myAjax('/admin/data/info', 'get', null, function (resData) {
+                $('#totalArticle').html(resData.totalArticle)
+                $('#dayArticle').html(resData.dayArticle)
+                $('#totalComment').html(resData.totalComment)
+                $('#dayComment').html(resData.dayComment)
+            })
+        }
+
+        // 获取文章日新增趋势数据
+        function getCurveData() {
+            myAjax('/admin/data/article', 'get', null, function (resData) {
+                let xAxisDate = resData.date.map(item => item.date);
+                let serCount = resData.date.map(item => item.count);
+                // 文章日新增趋势折线图方法
+                curve_show(xAxisDate, serCount)
+            })
+        }
+
+        // 文章日新增趋势折线图方法
+        function curve_show(xAxisDate, serCount) {
             // 1.初始化实例
             let myChart = echarts.init(document.getElementById('curve_show'));
 
@@ -78,10 +105,17 @@
                     left: 'center',
                     top: 15,
                 },
+                // 调整图标大小
+                grid: {
+                    top: 70,
+                    x: 45,
+                    x2: 40,
+                    y2: 50
+                },
                 xAxis: {
                     type: 'category',
                     boundaryGap: false,
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                    data: xAxisDate //['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
                 },
                 yAxis: {
                     type: 'value'
@@ -97,7 +131,7 @@
                     }
                 },
                 series: [{
-                    data: [820, 932, 901, 934, 1290, 1330, 1320],
+                    data: serCount, //[820, 932, 901, 934, 1290, 1330, 1320],
                     type: 'line',
                     //  设置折线的每一个点数据显示
                     label: {
@@ -126,6 +160,44 @@
                 }]
             };
 
+            // 3.调用方法进行图表输出
+            myChart.setOption(option);
+        }
+
+        // 获取文章分类饼状图数据
+        function getPieData() {
+            myAjax('/admin/data/category', 'get', null, function (resData) {
+                let names = resData.date.map(item => item.name);
+                let datas = resData.date.map(item => ({ name: item.name, value: item.articles }));
+                pie_show(names, datas)
+            })
+        }
+
+        // 文章分类饼状图方法
+        function pie_show(names, datas) {
+            // 1.初始化实例
+            let myChart = echarts.init(document.getElementById('pie_show'));
+
+            // 2. 设置参数
+            let option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                },
+                legend: {
+                    left: 10,
+                    data: names
+                },
+                series: [
+                    {
+                        name: '访问来源',
+                        type: 'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        data: datas
+                    }
+                ]
+            };
             // 3.调用方法进行图表输出
             myChart.setOption(option);
         }

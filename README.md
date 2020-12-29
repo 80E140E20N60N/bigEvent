@@ -11,6 +11,7 @@
 5. 模板引擎  template.js     http://aui.github.io/art-template/zh-cn/docs/index.html
 6. bootstrap 模态框
 7. FormData数据
+8. Echarts动态化数据图表
 
 
 ### 项目内容细节
@@ -99,11 +100,16 @@
 ### 9. Echarts图表功能
 #### 9.1 首页数据获取
 
-#### 9.2 Echarts使用
+#### 9.2 Echarts基本使用
         1. 在HTML中给一个放图表的容器，并初始化实例
         2. 设置图表需要的参数(官网实例找类似图表改造)
         3. 调用相关方法setOption 指定相关参数进行图表输出
 
+#### 9.3 数据动态化逻辑
+        1. ajax请求获取数据
+        2. map方法处理数据
+         2.1 遍历数组,提取某个属性的所有值，返回新数组 
+         2.2 对服务器返回的数据 属性名进行转换
 ### 参与贡献
 子晗
 
