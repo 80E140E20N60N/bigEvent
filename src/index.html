@@ -28,7 +28,7 @@
         <div class="menu">
             <div class="menu_collapse fl">
                 <a href="javascript:;" class="level_one"><i class="fa fa-list-ul"></i>全部分类</a>
-                <ul class="level_two">
+                <ul class="level_two menuli">
                     <li class="up"></li>
                     <li><a href="./list.html">最 新</a></li>
                     <li><a href="./list.html">科 技</a></li>
@@ -38,7 +38,7 @@
                     <li><a href="./list.html">公 司</a></li>
                 </ul>
             </div>
-            <ul class="left_menu fl">
+            <ul class="left_menu fl menuli">
                 <li><a href="#">最 新</a></li>
                 <li><a href="#">科 技</a></li>
                 <li><a href="#">股 市</a></li>
@@ -231,6 +231,25 @@
     <script src="./js/template-web.js"></script>
     <!-- 引入jq文件 -->
     <script src="./js/jquery-1.12.4.min.js"></script>
+    <script src="./js/http.js"></script>
+    <!-- 定义模板引擎 -->
+    <script id="menu_list" type="text/html">
+        {{each data}}
+            <li><a href="./list.html?aid={{$value.id}}">{{$value.name}}</a></li>
+        {{/each}}
+    </script>
+
+    <script>
+        $(function () {
+            getMenu();
+        })
+        function getMenu() {
+            myAjax('/index/category', 'get', null, function (resData) {
+                let resHtml = template('menu_list', resData);
+                $('.menuli').html(resHtml)
+            })
+        }
+    </script>
 </body>
 
 </html>

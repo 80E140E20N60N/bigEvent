@@ -8,10 +8,9 @@
     <title>大事件-列表页</title>
     <link rel="stylesheet" type="text/css" href="css/reset.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="css/jquery.pagination.css">
+    <link rel="stylesheet" href="./admin/libs/layui/css/layui.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
-    <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
-    <script type="text/javascript" src="js/jquery.pagination.min.js"></script>
+    <script src="./admin/libs/layui/layui.js"></script>
 </head>
 
 <body>
@@ -31,7 +30,7 @@
         <div class="menu">
             <div class="menu_collapse fl">
                 <a href="javascript:;" class="level_one"><i class="fa fa-list-ul"></i>全部分类</a>
-                <ul class="level_two">
+                <ul class="level_two menu_list">
                     <li class="up"></li>
                     <li><a href="#">最 新</a></li>
                     <li><a href="#">科 技</a></li>
@@ -41,7 +40,7 @@
                     <li><a href="#">公 司</a></li>
                 </ul>
             </div>
-            <ul class="left_menu fl">
+            <ul class="left_menu fl menu_list">
                 <li><a href="#">最 新</a></li>
                 <li><a href="#">科 技</a></li>
                 <li><a href="#">股 市</a></li>
@@ -60,93 +59,25 @@
         <div class="left_con setfr">
 
             <div class="list_title">
-                <h3>科 技</h3>
+                <h3 id="art_category">科 技</h3>
             </div>
 
-            <div class="common_news_list">
-                <a href="#" class="list_pic"><img src="images/pic09.jpg" alt=""></a>
-                <h4><a href="#">亚马逊金融试水中国？背后却是和华尔街的“金融战争” </a></h4>
-                <p>亚马逊抛弃了中国的买家们，却难以割舍庞大的卖家市场，有消息指出亚马逊中国将针对中国庞大的卖家群体推出一项贷款推荐计划。在连续对印度、墨西哥等新兴市场大力推广线上支付服务后，亚马逊金融试水进军中国市场的信号终于被放出。
-                </p>
-                <div class="new_info">
-                    <span>标签：财经&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<i class="fa fa-eye"></i>&nbsp;阅读( 5
-                        )&nbsp;&nbsp;&nbsp;<i class="fa fa-commenting"></i>&nbsp;评论( 10 )</span>
-                    <b>发布于 2018-08-30 12:18:58</b>
-                </div>
-            </div>
-
-            <div class="common_news_list">
-                <a href="#" class="list_pic"><img src="images/pic03.jpg" alt=""></a>
-                <h4><a href="#">马斯克的新花样？连接人脑和电脑的初创公司又筹了一笔钱,马斯克的新花样？连接人脑和电脑的初创公司又筹了一笔钱</a></h4>
-                <p>亚马逊抛弃了中国的买家们，却难以割舍庞大的卖家市场，有消息指出亚马逊中国将针对中国庞大的卖家群体推出一项贷款推荐计划。在连续对印度、墨西哥等新兴市场大力推广线上支付服务后，亚马逊金融试水进军中国市场的信号终于被放出。
-                </p>
-                <div class="new_info">
-                    <span>标签：财经&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<i class="fa fa-eye"></i>&nbsp;阅读( 5
-                        )&nbsp;&nbsp;&nbsp;<i class="fa fa-commenting"></i>&nbsp;评论( 10 )</span>
-                    <b>发布于 2018-08-30 12:18:58</b>
-                </div>
-            </div>
-
-            <div class="common_news_list">
-                <a href="#" class="list_pic"><img src="images/pic05.jpg" alt=""></a>
-                <h4><a href="#">马斯克的新花样？连接人脑和电脑的初创公司又筹了一笔钱</a></h4>
-                <p>亚马逊抛弃了中国的买家们，却难以割舍庞大的卖家市场，有消息指出亚马逊中国将针对中国庞大的卖家群体推出一项贷款推荐计划。在连续对印度、墨西哥等新兴市场大力推广线上支付服务后，亚马逊金融试水进军中国市场的信号终于被放出。
-                </p>
-                <div class="new_info">
-                    <span>标签：财经&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<i class="fa fa-eye"></i>&nbsp;阅读( 5
-                        )&nbsp;&nbsp;&nbsp;<i class="fa fa-commenting"></i>&nbsp;评论( 10 )</span>
-                    <b>发布于 2018-08-30 12:18:58</b>
-                </div>
-            </div>
-
-            <div class="common_news_list">
-                <a href="#" class="list_pic"><img src="images/pic07.jpg" alt=""></a>
-                <h4><a href="#">马斯克的新花样？连接人脑和电脑的初创公司又筹了一笔钱</a></h4>
-                <p>亚马逊抛弃了中国的买家们，却难以割舍庞大的卖家市场，有消息指出亚马逊中国将针对中国庞大的卖家群体推出一项贷款推荐计划。在连续对印度、墨西哥等新兴市场大力推广线上支付服务后，亚马逊金融试水进军中国市场的信号终于被放出。
-                </p>
-                <div class="new_info">
-                    <span>标签：财经&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<i class="fa fa-eye"></i>&nbsp;阅读( 5
-                        )&nbsp;&nbsp;&nbsp;<i class="fa fa-commenting"></i>&nbsp;评论( 10 )</span>
-                    <b>发布于 2018-08-30 12:18:58</b>
-                </div>
-            </div>
-
-            <div class="common_news_list">
-                <a href="#" class="list_pic"><img src="images/pic10.jpg" alt=""></a>
-                <h4><a href="#">马斯克的新花样？连接人脑和电脑的初创公司又筹了一笔钱</a></h4>
-                <p>亚马逊抛弃了中国的买家们，却难以割舍庞大的卖家市场，有消息指出亚马逊中国将针对中国庞大的卖家群体推出一项贷款推荐计划。在连续对印度、墨西哥等新兴市场大力推广线上支付服务后，亚马逊金融试水进军中国市场的信号终于被放出。
-                </p>
-                <div class="new_info">
-                    <span>标签：财经&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<i class="fa fa-eye"></i>&nbsp;阅读( 5
-                        )&nbsp;&nbsp;&nbsp;<i class="fa fa-commenting"></i>&nbsp;评论( 10 )</span>
-                    <b>发布于 2018-08-30 12:18:58</b>
-                </div>
-            </div>
-
-            <div class="common_news_list">
-                <a href="#" class="list_pic"><img src="images/pic04.jpg" alt=""></a>
-                <h4><a href="#">马斯克的新花样？连接人脑和电脑的初创公司又筹了一笔钱</a></h4>
-                <p>亚马逊抛弃了中国的买家们，却难以割舍庞大的卖家市场，有消息指出亚马逊中国将针对中国庞大的卖家群体推出一项贷款推荐计划。在连续对印度、墨西哥等新兴市场大力推广线上支付服务后，亚马逊金融试水进军中国市场的信号终于被放出。
-                </p>
-                <div class="new_info">
-                    <span>标签：财经&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<i class="fa fa-eye"></i>&nbsp;阅读( 5
-                        )&nbsp;&nbsp;&nbsp;<i class="fa fa-commenting"></i>&nbsp;评论( 10 )</span>
-                    <b>发布于 2018-08-30 12:18:58</b>
+            <div id="artList">
+                <div class="common_news_list">
+                    <a href="#" class="list_pic"><img src="images/pic04.jpg" alt=""></a>
+                    <h4><a href="#">马斯克的新花样？连接人脑和电脑的初创公司又筹了一笔钱</a></h4>
+                    <p>亚马逊抛弃了中国的买家们，却难以割舍庞大的卖家市场，有消息指出亚马逊中国将针对中国庞大的卖家群体推出一项贷款推荐计划。在连续对印度、墨西哥等新兴市场大力推广线上支付服务后，亚马逊金融试水进军中国市场的信号终于被放出。
+                    </p>
+                    <div class="new_info">
+                        <span>标签：财经&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<i class="fa fa-eye"></i>&nbsp;阅读( 5
+                            )&nbsp;&nbsp;&nbsp;<i class="fa fa-commenting"></i>&nbsp;评论( 10 )</span>
+                        <b>发布于 2018-08-30 12:18:58</b>
+                    </div>
                 </div>
             </div>
 
             <div id="pagination" class="page"></div>
-            <script>
-                $(function () {
-                    $("#pagination").pagination({
-                        currentPage: 2,
-                        totalPage: 8,
-                        callback: function (current) {
-                            alert('ok!');
-                        }
-                    });
-                });
-            </script>
+
 
         </div>
         <div class="right_con setfl">
@@ -225,8 +156,92 @@
         <p>CopyRight © 2019 深圳大事件信息技术股份有限公司 All Rights Reserved</p>
         <p>电话：0755-****888 粤ICP备*******8号</p>
     </div>
-    <!-- 导包template -->
+
+
+    <script src="./js/jquery-1.12.4.min.js"></script>
+    <!-- 导入template -->
     <script src="./js/template-web.js"></script>
+    <script src="./js/http.js"></script>
+    <!-- 模板引擎  文章类别列表-->
+    <script id="menuList" type="text/html">
+        {{each data}}
+        <li><a href="./list.html?aid={{$value.id}}">{{$value.name}}</a></li>
+        {{/each}}
+    </script>
+    <!-- 模板引擎 文章所有数据 -->
+    <script id='article' type="text/html">
+        {{each data}}    
+        <div class="common_news_list">
+            <a href="./article.html?id={{$value.id}}" class="list_pic"><img src="{{$value.cover}}" alt=""></a>
+            <h4><a href="./article.html?id={{$value.id}}">{{$value.title}}</a></h4>
+            <p>{{@ $value.content}}</p>
+            <div class="new_info">
+                <span>标签：{{$value.category}}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<i class="fa fa-eye"></i>&nbsp;阅读( {{$value.read}}
+                    )&nbsp;&nbsp;&nbsp;<i class="fa fa-commenting"></i>&nbsp;评论({{$value.comments}})</span>
+                <b>发布于 {{$value.date}}</b>
+            </div>
+        </div>
+        {{/each}}
+    </script>
+
+    <script>
+        $(function () {
+            // 获取文章分类列表
+            get_menuList()
+
+            // 获取分类下面的所有文章数据
+            get_artitle()
+        })
+
+        // 获取文章分类列表
+        function get_menuList() {
+            myAjax('/index/category', 'get', null, function (resData) {
+                let resHtml = template('menuList', resData);
+                $('.menu_list').html(resHtml)
+            })
+        }
+
+        // 获取分类下面的所有文章数据
+        function get_artitle(curr, perpage) {
+            // 炸开url,获取id
+            let a_id = window.location.href.split('=')[1]
+            let parmas = {
+                type: a_id,
+                page: curr,
+                perpage: perpage
+            }
+
+            myAjax('/index/search', 'get', parmas, function (resData) {
+                let resHtml = template('article', resData.data)
+                $('#artList').html(resHtml)
+                $('#art_category').html(resData.data.data[0].category)
+                // 分页组件
+                page_render(resData.data.totalCount, curr)
+            })
+        }
+
+        // 生出分页控件 
+        function page_render(totalCount, currpage) {
+            layui.use('laypage', function () {
+                // 获取到分页控件对象
+                var laypage = layui.laypage;
+                laypage.render({
+                    elem: 'pagination', // 表示分页控件要渲染到id
+                    count: totalCount, // 总数据条数
+                    limit: 6,   //每页显示的条数
+                    curr: currpage,
+                    jump: function (obj, first) {
+                        if (!first) {
+                            get_artitle(obj.curr, obj.limit);
+                        }
+                    }
+                });
+
+            });
+        }
+
+    </script>
+
 </body>
 
 </html>
