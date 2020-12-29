@@ -105,6 +105,14 @@
                 $('#nickname').html(resData.data.nickname)
             })
         }
+
+        // 用户退出登录功能
+        $('.logout').click(function () {
+            // 移除token
+            localStorage.removeItem('bignews_token')
+            // 跳转到登录页面
+            window.location = './login.html';
+        })
     </script>
 </body>
 
